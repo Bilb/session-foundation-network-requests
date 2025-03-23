@@ -1,0 +1,27 @@
+{
+  "name": "@session-foundation/network-requests",
+  "version": "0.0.1",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "repository": "git@github.com:Bilb/session-foundation-network-requests.git",
+  "author": "Audric Ackermann <audric@getsession.org>",
+  "license": "MIT",
+  "files": [
+    "dist/"
+  ],
+  "scripts": {
+    "build": "rm -rf dist/;  tsc",
+    "dev": "tsc --watch"
+  },
+  "devDependencies": {
+    "@types/node": "^22.13.11",
+    "typescript": "^5.8.2"
+  },
+  "dependencies": {
+    "@session-foundation/basic-types": "^0.0.5",
+    "buffer-crc32": "^1.0.0"
+  },
+  "publishConfig": {
+    "registry": "http://localhost:4873"
+  }
+}
