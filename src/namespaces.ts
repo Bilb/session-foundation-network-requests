@@ -1,6 +1,10 @@
 import { last, orderBy } from 'lodash';
-import { PickEnum } from '../../../types/Enums';
-import { assertUnreachable } from '../../../types/sqlSharedTypes';
+
+import { Logger } from './fake_logger';
+import {
+  assertUnreachable,
+  type PickEnum,
+} from '@session-foundation/basic-types';
 
 export enum SnodeNamespaces {
   /**
@@ -75,9 +79,15 @@ export type SnodeNamespacesGroupConfig = PickEnum<
 export type SnodeNamespacesGroup =
   | SnodeNamespacesGroupConfig
   | PickEnum<SnodeNamespaces, SnodeNamespaces.ClosedGroupMessages>
-  | PickEnum<SnodeNamespaces, SnodeNamespaces.ClosedGroupRevokedRetrievableMessages>;
+  | PickEnum<
+      SnodeNamespaces,
+      SnodeNamespaces.ClosedGroupRevokedRetrievableMessages
+    >;
 
-export type SnodeNamespacesUser = PickEnum<SnodeNamespaces, SnodeNamespaces.Default>;
+export type SnodeNamespacesUser = PickEnum<
+  SnodeNamespaces,
+  SnodeNamespaces.Default
+>;
 
 export type SnodeNamespacesUserConfig = PickEnum<
   SnodeNamespaces,
@@ -91,7 +101,9 @@ export type SnodeNamespacesUserConfig = PickEnum<
  * Returns true if that namespace is associated with the config of a user (not his messages, only configs)
  */
 // eslint-disable-next-line consistent-return
-function isUserConfigNamespace(namespace: SnodeNamespaces): namespace is SnodeNamespacesUserConfig {
+function isUserConfigNamespace(
+  namespace: SnodeNamespaces
+): namespace is SnodeNamespacesUserConfig {
   switch (namespace) {
     case SnodeNamespaces.UserProfile:
     case SnodeNamespaces.UserContacts:
@@ -110,9 +122,15 @@ function isUserConfigNamespace(namespace: SnodeNamespaces): namespace is SnodeNa
 
     default:
       try {
-        assertUnreachable(namespace, `isUserConfigNamespace case not handled: ${namespace}`);
-      } catch (e) {
-        window.log.warn(`isUserConfigNamespace case not handled: ${namespace}: ${e.message}`);
+        assertUnreachable(
+          namespace,
+          `isUserConfigNamespace case not handled: ${namespace}`
+        );
+        throw new Error('isUserConfigNamespace case not handled');
+      } catch (e: any) {
+        Logger.warn(
+          `isUserConfigNamespace case not handled: ${namespace}: ${e.message}`
+        );
         return false;
       }
   }
@@ -141,9 +159,14 @@ function isGroupConfigNamespace(
 
     default:
       try {
-        assertUnreachable(namespace, `isGroupConfigNamespace case not handled: ${namespace}`);
-      } catch (e) {
-        window.log.warn(`isGroupConfigNamespace case not handled: ${namespace}: ${e.message}`);
+        assertUnreachable(
+          namespace,
+          `isGroupConfigNamespace case not handled: ${namespace}`
+        );
+      } catch (e: any) {
+        Logger.warn(
+          `isGroupConfigNamespace case not handled: ${namespace}: ${e.message}`
+        );
       }
   }
   return false;
@@ -154,7 +177,9 @@ function isGroupConfigNamespace(
  * @param namespace the namespace to check
  * @returns true if that namespace is a valid namespace for a 03 group (either a config namespace or a message namespace)
  */
-function isGroupNamespace(namespace: SnodeNamespaces): namespace is SnodeNamespacesGroup {
+function isGroupNamespace(
+  namespace: SnodeNamespaces
+): namespace is SnodeNamespacesGroup {
   if (isGroupConfigNamespace(namespace)) {
     return true;
   }
@@ -174,9 +199,14 @@ function isGroupNamespace(namespace: SnodeNamespaces): namespace is SnodeNamespa
       return false;
     default:
       try {
-        assertUnreachable(namespace, `isGroupNamespace case not handled: ${namespace}`);
-      } catch (e) {
-        window.log.warn(`isGroupNamespace case not handled: ${namespace}: ${e.message}`);
+        assertUnreachable(
+          namespace,
+          `isGroupNamespace case not handled: ${namespace}`
+        );
+      } catch (e: any) {
+        Logger.warn(
+          `isGroupNamespace case not handled: ${namespace}: ${e.message}`
+        );
         return false;
       }
   }
@@ -201,9 +231,14 @@ export function namespacePriority(namespace: SnodeNamespaces): 10 | 1 {
 
     default:
       try {
-        assertUnreachable(namespace, `namespacePriority case not handled: ${namespace}`);
-      } catch (e) {
-        window.log.warn(`namespacePriority case not handled: ${namespace}: ${e.message}`);
+        assertUnreachable(
+          namespace,
+          `namespacePriority case not handled: ${namespace}`
+        );
+      } catch (e: any) {
+        Logger.warn(
+          `namespacePriority case not handled: ${namespace}: ${e.message}`
+        );
         return 1;
       }
   }
@@ -212,24 +247,36 @@ export function namespacePriority(namespace: SnodeNamespaces): 10 | 1 {
 
 function maxSizeMap(namespaces: Array<SnodeNamespaces>) {
   let lastSplit = 1;
-  const withPriorities = namespaces.map(namespace => {
+  const withPriorities = namespaces.map((namespace) => {
     return { namespace, priority: namespacePriority(namespace) };
   });
-  const groupedByPriorities: Array<{ priority: number; namespaces: Array<SnodeNamespaces> }> = [];
-  withPriorities.forEach(item => {
-    if (!groupedByPriorities.find(p => p.priority === item.priority)) {
+  const groupedByPriorities: Array<{
+    priority: number;
+    namespaces: Array<SnodeNamespaces>;
+  }> = [];
+  withPriorities.forEach((item) => {
+    if (!groupedByPriorities.find((p) => p.priority === item.priority)) {
       groupedByPriorities.push({ priority: item.priority, namespaces: [] });
     }
-    groupedByPriorities.find(p => p.priority === item.priority)?.namespaces.push(item.namespace);
+    groupedByPriorities
+      .find((p) => p.priority === item.priority)
+      ?.namespaces.push(item.namespace);
   });
 
-  const sortedDescPriorities = orderBy(groupedByPriorities, ['priority'], ['desc']);
+  const sortedDescPriorities = orderBy(
+    groupedByPriorities,
+    ['priority'],
+    ['desc']
+  );
   const lowestPriority = last(sortedDescPriorities)?.priority || 1;
-  const sizeMap = sortedDescPriorities.flatMap(m => {
+  const sizeMap = sortedDescPriorities.flatMap((m) => {
     const paddingForLowerPriority = m.priority === lowestPriority ? 0 : 1;
     const splitsForPriority = paddingForLowerPriority + m.namespaces.length;
     lastSplit *= splitsForPriority;
-    return m.namespaces.map(namespace => ({ namespace, maxSize: -lastSplit }));
+    return m.namespaces.map((namespace) => ({
+      namespace,
+      maxSize: -lastSplit,
+    }));
   });
   return sizeMap;
 }

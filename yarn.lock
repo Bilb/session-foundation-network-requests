@@ -9,17 +9,17 @@
   dependencies:
     libsodium-wrappers-sumo "^0.7.15"
 
+"@types/lodash@^4.17.16":
+  version "4.17.16"
+  resolved "http://localhost:4873/@types/lodash/-/lodash-4.17.16.tgz#94ae78fab4a38d73086e962d0b65c30d816bfb0a"
+  integrity sha512-HX7Em5NYQAXKW+1T+FiuG27NGwzJfCX3s1GjOa7ujxZa52kjJLOr4FUxT+giF6Tgxv1e+/czV/iTtBw27WTU9g==
+
 "@types/node@^22.13.11":
   version "22.13.11"
   resolved "http://localhost:4873/@types/node/-/node-22.13.11.tgz#f0ed6b302dcf0f4229d44ea707e77484ad46d234"
   integrity sha512-iEUCUJoU0i3VnrCmgoWCXttklWcvoCIx4jzcP22fioIVSdTmjgoEvmAO/QPw6TcS9k5FrNgn4w7q5lGOd1CT5g==
   dependencies:
     undici-types "~6.20.0"
-
-buffer-crc32@^1.0.0:
-  version "1.0.0"
-  resolved "http://localhost:4873/buffer-crc32/-/buffer-crc32-1.0.0.tgz#a10993b9055081d55304bd9feb4a072de179f405"
-  integrity sha512-Db1SbgBS/fg/392AblrMJk97KggmvYhr4pB5ZIMTWtaivCPMWLkmb7m21cJvpvgK+J3nsU2CmmixNBZx4vFj/w==
 
 libsodium-sumo@^0.7.15:
   version "0.7.15"
@@ -32,6 +32,11 @@ libsodium-wrappers-sumo@^0.7.15:
   integrity sha512-aSWY8wKDZh5TC7rMvEdTHoyppVq/1dTSAeAR7H6pzd6QRT3vQWcT5pGwCotLcpPEOLXX6VvqihSPkpEhYAjANA==
   dependencies:
     libsodium-sumo "^0.7.15"
+
+lodash@^4.17.21:
+  version "4.17.21"
+  resolved "http://localhost:4873/lodash/-/lodash-4.17.21.tgz#679591c564c3bffaae8454cf0b3df370c3d6911c"
+  integrity sha512-v2kDEe57lecTulaDIuNTPy3Ry4gLGJ6Z1O3vE1krgXZNrsQ+LFTGHVxVjcXPs17LhbZVGedAJv8XZ1tvj5FvSg==
 
 typescript@^5.8.2:
   version "5.8.2"
